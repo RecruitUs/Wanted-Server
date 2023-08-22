@@ -1,4 +1,5 @@
 ## Wanted-Server
+![WANTED5](https://github.com/RecruitUs/Wanted-Server/assets/67510260/99c1ab39-481d-4eee-842f-5ba66f5aa40c)
 
 
 Commit Convention
