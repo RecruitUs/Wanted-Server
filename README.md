@@ -21,4 +21,4 @@ Branch Convention
 | --- | --- |
 | main | master 브랜치 |
 | develop | main 서브 브랜치 |
-| feat/기능명 | 기능 추가용 feat 브랜치 |
+| feat/#이슈번호-기능명 | 기능 추가용 feat 브랜치 |
