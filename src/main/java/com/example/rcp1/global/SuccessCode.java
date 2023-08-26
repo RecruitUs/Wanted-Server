@@ -9,13 +9,17 @@ import static org.springframework.http.HttpStatus.OK;
 
 @Getter
 @AllArgsConstructor
-public class SuccessCode {
+public enum SuccessCode {
     // api 만들고 수정하기
 //    CUSTOM_SUCCESS(OK, "~ 조회에 성공했습니다."),
 //    CUSTOM_CREATED_SUCCESS(CREATED, "~ 생성에 성공했습니다.");
+    SIGNUP_SUCCESS(OK, "회원가입에 성공했습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;
+
+
 
     public int getHttpStatusCode() {
         return httpStatus.value();
