@@ -23,7 +23,6 @@ public class SignUpReq {
     @NotBlank
     private String specializedField;
 
-    @NotBlank
     private Long career;
 
     @NotBlank
