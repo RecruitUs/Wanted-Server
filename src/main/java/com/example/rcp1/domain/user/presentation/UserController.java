@@ -5,6 +5,7 @@ import com.example.rcp1.domain.user.domain.User;
 import com.example.rcp1.domain.user.dto.SignInReq;
 import com.example.rcp1.domain.user.dto.SignUpReq;
 import com.example.rcp1.global.BaseResponse;
+import com.example.rcp1.global.CustomAuthenticationException;
 import com.example.rcp1.global.ErrorCode;
 import com.example.rcp1.global.SuccessCode;
 import io.swagger.models.Response;
@@ -40,12 +41,18 @@ public class UserController {
     @PostMapping("/signIn")
     public ResponseEntity<BaseResponse<String>> signIn(@Valid @RequestBody SignInReq signInReq) {
         try {
-            String token = userService.login(signInReq.getEmail(), signInReq.getPassword());
-            return ResponseEntity.ok(BaseResponse.success(SuccessCode.SIGNIN_SUCCESS, token));
-        } catch (Exception e) {
+            String token = userService.signIn(signInReq);
+            if (token != null) {
+                return ResponseEntity.ok(BaseResponse.success(SuccessCode.SIGNIN_SUCCESS, token));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(BaseResponse.error(ErrorCode.EXPIRED_TOKEN, "로그인에 실패했습니다."));
+            }
+        } catch (CustomAuthenticationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "로그인에 실패했습니다."));
+                    .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, e.getMessage()));
         }
+
 //        return ResponseEntity.ok(BaseResponse.success(SuccessCode.SIGNIN_SUCCESS, userService.login("이재혁", "")));
     }
 
