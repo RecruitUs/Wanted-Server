@@ -2,16 +2,19 @@ package com.example.rcp1.domain.user.domain;
 
 import com.example.rcp1.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Table(name = "USER")
 public class User extends BaseEntity {
@@ -58,7 +61,6 @@ public class User extends BaseEntity {
 
 
     @Builder
-
     public User(Long id, String email, String password, String name, String phoneNumber, String specializedField, Long career, String position, String school, String job, LocalDateTime created, LocalDateTime updated, String status) {
         this.id = id;
         this.email = email;
@@ -74,4 +76,6 @@ public class User extends BaseEntity {
         this.updated = updated;
         this.status = status;
     }
+
+
 }
