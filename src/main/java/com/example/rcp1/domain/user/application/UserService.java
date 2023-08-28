@@ -6,6 +6,7 @@ import com.example.rcp1.domain.user.dto.SignInReq;
 import com.example.rcp1.domain.user.dto.SignUpReq;
 import com.example.rcp1.global.CustomAuthenticationException;
 import com.example.rcp1.global.config.security.util.JwtUtil;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,4 +73,18 @@ public class UserService {
     }
 
 
+    // 유저 정보 논리 삭제
+    public String deleteUser(String token) {
+        String subtractedEmail = JwtUtil.getUserEmail(token, secret_key);
+
+        Optional<User> user = userRepository.findByEmail(subtractedEmail);
+
+        User tmpUser = user.get();
+
+        tmpUser.setStatusD();
+
+        userRepository.save(tmpUser);
+
+        return "finish";
+    }
 }

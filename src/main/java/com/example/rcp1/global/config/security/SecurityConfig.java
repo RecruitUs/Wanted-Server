@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests()
-                .requestMatchers("/user/signUp", "/user/signIn").permitAll()
+                .requestMatchers("/user/signUp", "/user/signIn", "/user/delete").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/**").authenticated()
                 .and()
                 .sessionManagement()
