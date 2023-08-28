@@ -51,19 +51,14 @@ public class UserService {
 
 
     public String signIn(SignInReq signInReq) {
-        // 인증 과정
-//        Optional<User> byEmail = userRepository.findByEmail(signInReq.getEmail());
-//        System.out.println("byEmail = " + byEmail);
-//        if (!BCrypt.checkpw(password, user.getPassword())) {
-//
-//            return null;
-//        }
 
         // 이메일을 통해 사용자 정보 조회
         Optional<User> byEmail = userRepository.findByEmail(signInReq.getEmail());
 
         if (byEmail.isPresent()) {
             User user = byEmail.get();
+//            boolean isPasswordCorrect = BCrypt.checkpw(signInReq.getPassword(), user.getPassword());
+
             if (BCrypt.checkpw(signInReq.getPassword(), user.getPassword())) {
                 return JwtUtil.createJwt(signInReq.getEmail(), secret_key, expiredMs);
             } else {

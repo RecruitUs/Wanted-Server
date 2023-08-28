@@ -42,6 +42,8 @@ public class UserController {
     public ResponseEntity<BaseResponse<String>> signIn(@Valid @RequestBody SignInReq signInReq) {
         try {
             String token = userService.signIn(signInReq);
+            System.out.println("token = " + token);
+
             if (token != null) {
                 return ResponseEntity.ok(BaseResponse.success(SuccessCode.SIGNIN_SUCCESS, token));
             } else {
@@ -55,6 +57,10 @@ public class UserController {
 
 //        return ResponseEntity.ok(BaseResponse.success(SuccessCode.SIGNIN_SUCCESS, userService.login("이재혁", "")));
     }
+
+
+
+
 
     // 테스트용 인가 글쓰기 (삭제 예정)
     @PostMapping("/write")
