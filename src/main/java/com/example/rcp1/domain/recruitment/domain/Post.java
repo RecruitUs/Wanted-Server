@@ -1,6 +1,7 @@
 package com.example.rcp1.domain.recruitment.domain;
 
 
+import com.example.rcp1.domain.common.BaseEntity;
 import com.example.rcp1.domain.company.domain.Company;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Table(name="RECRUITMENT_POST")
-public class Post {
+public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +24,6 @@ public class Post {
     @ManyToOne
     @JoinColumn(name="company_id")
     private Company company;
-
 
     @Column
     private String title;
