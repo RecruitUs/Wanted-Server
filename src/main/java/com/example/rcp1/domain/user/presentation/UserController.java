@@ -76,22 +76,21 @@ public class UserController {
 
     // 유저 정보 수정
     @PatchMapping("/profile")
-    public ResponseEntity<String> updateProfile(
+    public ResponseEntity<BaseResponse<?>> updateProfile(
             @RequestHeader("Authorization") String Authorization, // 헤더에서 Authorization 값을 받아온다
             @Valid @RequestBody UpdateProfileReq updateProfileReq) {
         try {
             String access_token = Authorization.substring(7); // Bearer 이후 토큰만 파싱
-            System.out.println("access_token = " + access_token);
-            System.out.println("test 성공!!!!");
 
             // 토큰에서 이메일 파싱 후 이메일이랑 updateprofilereq 객체랑 같이 서비스에 보낸 후 수정처리 하는 코드
+            User user = userService.updateProfile(access_token, updateProfileReq);
 
-            return ResponseEntity.ok().body("성공");
+
+            return ResponseEntity.ok(BaseResponse.success(SuccessCode.UPDATE_PROFILE_SUCCESS, user));
 
         } catch (Exception e) {
-            return ResponseEntity.ok().body("실패");
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                        .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "유저 정보 수정에 실패했습니다."));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "유저 정보 수정에 실패했습니다."));
         }
 
     }

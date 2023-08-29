@@ -4,6 +4,7 @@ import com.example.rcp1.domain.user.domain.User;
 import com.example.rcp1.domain.user.domain.repository.UserRepository;
 import com.example.rcp1.domain.user.dto.SignInReq;
 import com.example.rcp1.domain.user.dto.SignUpReq;
+import com.example.rcp1.domain.user.dto.UpdateProfileReq;
 import com.example.rcp1.global.CustomAuthenticationException;
 import com.example.rcp1.global.config.security.util.JwtUtil;
 import io.jsonwebtoken.Jwt;
@@ -89,4 +90,59 @@ public class UserService {
 
         return "";
     }
+
+
+    public User updateProfile(String access_token, UpdateProfileReq updateProfileReq) {
+
+        try {
+            String email = JwtUtil.getUserEmail(access_token, secret_key);
+
+            Optional<User> user = userRepository.findByEmail(email);
+
+            if (user.isPresent()) {
+                User userRes = user.get();
+
+                if (updateProfileReq.getName() != null) {
+                    userRes.setName(updateProfileReq.getName());
+                }
+
+                if (updateProfileReq.getPhoneNumber() != null) {
+                    userRes.setPhoneNumber(updateProfileReq.getPhoneNumber());
+                }
+
+                if (updateProfileReq.getSpecializedField() != null) {
+                    userRes.setSpecializedField(updateProfileReq.getSpecializedField());
+                }
+
+                if (updateProfileReq.getCareer() != null) {
+                    userRes.setCareer(updateProfileReq.getCareer());
+                }
+
+                if (updateProfileReq.getPosition() != null) {
+                    userRes.setPosition(updateProfileReq.getPosition());
+                }
+
+                if (updateProfileReq.getSchool() != null) {
+                    userRes.setSchool(updateProfileReq.getSchool());
+                }
+
+                if (updateProfileReq.getJob() != null) {
+                    userRes.setJob(updateProfileReq.getJob());
+                }
+
+                userRepository.save(userRes);
+                return userRes;
+
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new CustomAuthenticationException("유저 정보 수정에 실패했습니다.");
+        }
+
+
+    }
+
+
+
 }
