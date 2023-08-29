@@ -4,8 +4,10 @@ import com.example.rcp1.domain.user.domain.User;
 import com.example.rcp1.domain.user.domain.repository.UserRepository;
 import com.example.rcp1.domain.user.dto.SignInReq;
 import com.example.rcp1.domain.user.dto.SignUpReq;
+import com.example.rcp1.domain.user.dto.UpdateProfileReq;
 import com.example.rcp1.global.CustomAuthenticationException;
 import com.example.rcp1.global.config.security.util.JwtUtil;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +72,77 @@ public class UserService {
 
         throw new CustomAuthenticationException("사용자를 찾을 수 없습니다.");
     }
+
+
+    // 유저 정보 논리 삭제
+    public String deleteUser(String token) {
+
+
+        String subtractedEmail = JwtUtil.getUserEmail(token, secret_key);
+
+        Optional<User> user = userRepository.findByEmail(subtractedEmail);
+
+        User tmpUser = user.get();
+
+        tmpUser.setStatusD();
+
+        userRepository.save(tmpUser);
+
+        return "";
+    }
+
+
+    public User updateProfile(String access_token, UpdateProfileReq updateProfileReq) {
+
+        try {
+            String email = JwtUtil.getUserEmail(access_token, secret_key);
+
+            Optional<User> user = userRepository.findByEmail(email);
+
+            if (user.isPresent()) {
+                User userRes = user.get();
+
+                if (updateProfileReq.getName() != null) {
+                    userRes.setName(updateProfileReq.getName());
+                }
+
+                if (updateProfileReq.getPhoneNumber() != null) {
+                    userRes.setPhoneNumber(updateProfileReq.getPhoneNumber());
+                }
+
+                if (updateProfileReq.getSpecializedField() != null) {
+                    userRes.setSpecializedField(updateProfileReq.getSpecializedField());
+                }
+
+                if (updateProfileReq.getCareer() != null) {
+                    userRes.setCareer(updateProfileReq.getCareer());
+                }
+
+                if (updateProfileReq.getPosition() != null) {
+                    userRes.setPosition(updateProfileReq.getPosition());
+                }
+
+                if (updateProfileReq.getSchool() != null) {
+                    userRes.setSchool(updateProfileReq.getSchool());
+                }
+
+                if (updateProfileReq.getJob() != null) {
+                    userRes.setJob(updateProfileReq.getJob());
+                }
+
+                userRepository.save(userRes);
+                return userRes;
+
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new CustomAuthenticationException("유저 정보 수정에 실패했습니다.");
+        }
+
+
+    }
+
 
 
 }

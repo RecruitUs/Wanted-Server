@@ -48,7 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 토큰 만료 여부 확인
         if (JwtUtil.isExpired(token, secretKey)) {
-            log.error("토큰이 만료되었습니다.");
+            log.error("유효하지 않은 액세스 토큰입니다.");
             filterChain.doFilter(request, response);
             return;
         }

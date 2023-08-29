@@ -78,4 +78,9 @@ public class User extends BaseEntity {
     }
 
 
+    // 논리 삭제 상태 수정
+    public void setStatusD() {
+        this.status = "D";
+    }
+
 }
