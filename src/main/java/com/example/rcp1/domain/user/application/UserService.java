@@ -75,6 +75,8 @@ public class UserService {
 
     // 유저 정보 논리 삭제
     public String deleteUser(String token) {
+
+
         String subtractedEmail = JwtUtil.getUserEmail(token, secret_key);
 
         Optional<User> user = userRepository.findByEmail(subtractedEmail);
@@ -85,6 +87,6 @@ public class UserService {
 
         userRepository.save(tmpUser);
 
-        return "finish";
+        return "";
     }
 }

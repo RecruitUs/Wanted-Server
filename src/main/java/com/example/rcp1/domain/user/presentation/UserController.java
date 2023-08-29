@@ -99,14 +99,18 @@ public class UserController {
 
     // 유저 정보 탈퇴(논리 삭제)
     @PatchMapping("/delete")
-    public ResponseEntity<String> deleteUser(
+    public ResponseEntity<BaseResponse<?>> deleteUser(
             @RequestHeader("Authorization") String authorization
     ) {
-        String token = authorization.substring(7);
-        String t = userService.deleteUser(token);
 
+        try {
+            String token = authorization.substring(7);
+            String t = userService.deleteUser(token);
 
-        return ResponseEntity.ok().body(t);
+            return ResponseEntity.ok(BaseResponse.success(SuccessCode.LOGICAL_DELETE_SUCCESS));
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(BaseResponse.error(ErrorCode.EXPIRED_TOKEN));
+        }
     }
 
 
