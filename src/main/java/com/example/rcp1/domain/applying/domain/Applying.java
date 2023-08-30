@@ -45,4 +45,9 @@ public class Applying {
     public void setStatusD() {
         this.status = "D";
     }
+
+    public void setStatus(String status) {
+        this.status = status;
+
+    }
 }
