@@ -66,7 +66,7 @@ public class RecruitmentService {
     }
 
     public List<PostResDTO> retrieveAllRecruitmentPosts(){
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findByStatusNot("D");
         if(posts!=null){
             List<PostResDTO> postDTOs = new ArrayList<PostResDTO>();
             for(Post post : posts){
@@ -79,7 +79,7 @@ public class RecruitmentService {
     }
 
     public PostResDTO retrieveRecruitmentPostById(Long postId) {
-        Optional<Post> postOptional = postRepository.findById(postId);
+        Optional<Post> postOptional = postRepository.findByIdAndStatusNot(postId,"D");
         PostResDTO postResDTO = null;
         if(postOptional.isPresent()){
             Post post = postOptional.get();
@@ -92,7 +92,7 @@ public class RecruitmentService {
         String email = JwtUtil.getUserEmail(token, secretKey);
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            List<Post> posts = postRepository.findByUser_Id(user.get().getId());
+            List<Post> posts = postRepository.findByUser_IdAndStatusNot(user.get().getId(),"D");
             List<PostResDTO> postDTOs = new ArrayList<PostResDTO>();
             for(Post post : posts){
                 //ModelMapper.map : ENTITY -> DTO
@@ -114,7 +114,7 @@ public class RecruitmentService {
         }
 
         User user = optionalUser.get();
-        Optional<Post> optionalPost = postRepository.findById(postId);
+        Optional<Post> optionalPost = postRepository.findByIdAndStatusNot(postId,"D");
         if (!optionalPost.isPresent()) {
             //게시물을 찾을 수 없음
             return null;
@@ -122,7 +122,7 @@ public class RecruitmentService {
 
         Post post = optionalPost.get();
         if (!user.getId().equals(post.getUser().getId())) {
-            //올바르지 않은 사용자
+            //올바르지 않은 사용자(해당 공고를 작성하지 않은 사용자)
             return null;
         }
         //Update
@@ -169,5 +169,31 @@ public class RecruitmentService {
         }
        Post updatedPost = postRepository.save(post);
        return modelMapper.map(updatedPost,PostResDTO.class);
+    }
+
+    @Transactional
+    public Post deleteRecruitmentPostById(String token, Long postId) {
+        String email = JwtUtil.getUserEmail(token, secretKey);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (!optionalUser.isPresent()) {
+            //사용자를 찾을 수 없음
+            return null;//null->Exception 변경 예정
+        }
+
+        User user = optionalUser.get();
+        Optional<Post> optionalPost = postRepository.findByIdAndStatusNot(postId,"D");
+        if (!optionalPost.isPresent()) {
+            //게시물을 찾을 수 없음
+            return null;
+        }
+
+        Post post = optionalPost.get();
+        if (!user.getId().equals(post.getUser().getId())) {
+            //올바르지 않은 사용자
+            return null;
+        }
+        //Delete
+        post.setStatusD();
+        return postRepository.save(post);
     }
 }
