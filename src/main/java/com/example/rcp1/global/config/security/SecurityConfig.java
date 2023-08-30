@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/user/signUp", "/user/signIn", "/user/delete", "/user/profile").permitAll()
                 .requestMatchers("/heart/**").permitAll()
+                .requestMatchers("/recruiting/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/**").authenticated()
                 .and()
                 .sessionManagement()
