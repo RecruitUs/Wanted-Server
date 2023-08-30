@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name="RECRUITMENT_POST")
 public class Post extends BaseEntity {
@@ -86,65 +86,7 @@ public class Post extends BaseEntity {
      * @Data가 기본으로 생성해주는 toString이나 hashCode 그리고 equals에서 "모든 프로퍼티"를 사용해서 값을 구하는데,
      * 그 때 양방향 관계 때문에 무한 루프가 생길 수 있음. A->B->A->B 이런식.
      * 따라서 getter and setter를 별도 작성
-     * 해당 클래스에서는 setter 생성시 오류 발생 -> getter만 사용 조치 **/
-    public Long getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCompany_photo_url() {
-        return company_photo_url;
-    }
-
-    public int getCompensation_recommender() {
-        return compensation_recommender;
-    }
-
-    public int getCompensation_applicant() {
-        return compensation_applicant;
-    }
-
-    public LocalDateTime getDueDate() {
-        return dueDate;
-    }
-
-    public int getHeart() {
-        return heart;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getWorking_address() {
-        return working_address;
-    }
-
-    @Override
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    @Override
-    public LocalDateTime getUpdated() {
-        return updated;
-    }
-
-    @Override
-    public String getStatus() {
-        return status;
-    }
-
-    public Set<Field> getFields() {
-        return fields;
-    }
+     **/
 
     //논리삭제
     public void setStatusD() {
