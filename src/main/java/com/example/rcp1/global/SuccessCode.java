@@ -17,7 +17,7 @@ public enum SuccessCode {
     SIGNIN_SUCCESS(OK, "로그인에 성공했습니다."),
     UPDATE_PROFILE_SUCCESS(OK, "프로필이 성공적으로 수정되었습니다."),
     LOGICAL_DELETE_SUCCESS(OK, "논리적으로 삭제 되었습니다."),
-    CREATE_POST_SUCCESS(OK, "채용공고가 성공적으로 게시되었습니다.");
+    POST_CREATED_SUCCESS(CREATED, "채용공고 생성에 성공했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
