@@ -57,4 +57,25 @@ public class ApplyingService {
 
         return applying;
     }
+
+    // 채용 지원 취소
+    public void applyCancel(String token, Long applyingId) {
+
+        String email = JwtUtil.getUserEmail(token, secret_key);
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = optionalUser.get();
+
+        Optional<Applying> optionalApplying = applyingRepository.findById(applyingId);
+        Applying applying = optionalApplying.get();
+
+        if (user == applying.getUser()) {
+            applyingRepository.deleteById(applying.getId());
+        } else {
+            return;
+        }
+
+
+
+    }
 }

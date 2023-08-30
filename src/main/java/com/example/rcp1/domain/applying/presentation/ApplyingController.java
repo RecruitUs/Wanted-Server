@@ -6,6 +6,7 @@ import com.example.rcp1.domain.applying.dto.ApplyReq;
 import com.example.rcp1.global.BaseResponse;
 import com.example.rcp1.global.ErrorCode;
 import com.example.rcp1.global.SuccessCode;
+import com.example.rcp1.global.config.security.util.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -42,6 +43,19 @@ public class ApplyingController {
 
 
     // 지원 취소
+    @DeleteMapping("/{applyingId}")
+    public ResponseEntity<BaseResponse<?>> applyCancel(
+            @RequestHeader("Authorization") String Authorization,
+            @PathVariable("applyingId") Long applyingId) {
+
+            String token = Authorization.substring(7);
+
+            applyingService.applyCancel(token, applyingId);
+
+            return ResponseEntity.ok(BaseResponse.success(SuccessCode.DELETE_APPLY_SUCCESS));
+
+
+    }
 
 
     // 유저의 지원 현황 조회
