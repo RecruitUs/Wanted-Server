@@ -36,6 +36,7 @@ public class UserService {
         User user = User.builder()
                 .email(signUpReq.getEmail())
                 .password(BCrypt.hashpw(signUpReq.getPassword(), BCrypt.gensalt())) // 패스워드 암호화
+                .userType(signUpReq.getUserType())
                 .name(signUpReq.getName())
                 .phoneNumber(signUpReq.getPhoneNumber())
                 .specializedField(signUpReq.getSpecializedField())

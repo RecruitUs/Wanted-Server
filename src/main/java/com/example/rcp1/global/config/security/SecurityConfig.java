@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .cors().and()
                 .authorizeHttpRequests()
                 .requestMatchers("/user/signUp", "/user/signIn", "/user/delete", "/user/profile").permitAll()
+                .requestMatchers("/heart/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/**").authenticated()
                 .and()
                 .sessionManagement()
