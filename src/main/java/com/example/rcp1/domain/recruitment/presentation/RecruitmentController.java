@@ -8,6 +8,7 @@ import com.example.rcp1.global.BaseResponse;
 import com.example.rcp1.global.ErrorCode;
 import com.example.rcp1.global.SuccessCode;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/recruiting")
 @RestController
+@RequiredArgsConstructor
 public class RecruitmentController {
-
-    @Autowired
-    private RecruitmentService recruitmentService;
-
+    private final RecruitmentService recruitmentService;
 
     @PostMapping("/posts")
     public ResponseEntity<BaseResponse<Post>> createRecruitmentPost(@RequestHeader("Authorization") String Authorization, @Valid @RequestBody PostDTO postDTO) {

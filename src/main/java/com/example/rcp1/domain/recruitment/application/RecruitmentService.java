@@ -10,6 +10,7 @@ import com.example.rcp1.domain.recruitment.dto.PostDTO;
 import com.example.rcp1.domain.user.domain.User;
 import com.example.rcp1.domain.user.domain.repository.UserRepository;
 import com.example.rcp1.global.config.security.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,23 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RecruitmentService {
-
-
-    private final PostRepository postRepository;
 
     @Value("${SECRET_KEY}")
     private String secretKey;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final FieldRepository fieldRepository;
-
-    @Autowired
-    public RecruitmentService(PostRepository postRepository,
-                              UserRepository userRepository, FieldRepository fieldRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-        this.fieldRepository = fieldRepository;
-    }
 
     @Transactional
     public Post createRecruitmentPost(String token, PostDTO postDTO) {
