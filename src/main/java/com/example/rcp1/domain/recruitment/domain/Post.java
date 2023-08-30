@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -39,7 +40,7 @@ public class Post extends BaseEntity {
     private int compensation_applicant;
 
     @Column
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @Column
     private int heart;
@@ -64,7 +65,7 @@ public class Post extends BaseEntity {
     private Set<Field> fields;
 
     @Builder
-    public Post(Long id, User user, String title, String company_photo_url, int compensation_recommender, int compensation_applicant, LocalDateTime dueDate, int heart, String content, String working_address, LocalDateTime created, LocalDateTime updated, String status) {
+    public Post(Long id, User user, String title, String company_photo_url, int compensation_recommender, int compensation_applicant, LocalDate dueDate, int heart, String content, String working_address, LocalDateTime created, LocalDateTime updated, String status) {
         this.id = id;
         this.user = user;
         this.title = title;

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class PostDTO {
     @Min(0)
     private int compensation_applicant = 0;
 
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @Min(0)
     private int heart = 0;
