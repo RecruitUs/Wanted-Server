@@ -12,6 +12,12 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
+    List<Post> findByStatusNot(String status);
+
+    Optional<Post> findByIdAndStatusNot(Long id, String status);
+
+    List<Post> findByUser_IdAndStatusNot(Long userId, String status);
+
     List<Post> findByUser_Id(Long userId);
 
 }

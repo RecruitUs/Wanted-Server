@@ -103,6 +103,21 @@ public class RecruitmentController {
     }
 
 
-
-
+    //특정 채용공고 논리삭제
+    @PatchMapping("/posts/{postId}/delete")
+    public ResponseEntity<BaseResponse<Post>> deleteRecruitmentPostById(@RequestHeader("Authorization") String Authorization, @PathVariable Long postId){
+        try {
+            String token = Authorization.substring(7);
+            Post post = recruitmentService.deleteRecruitmentPostById(token,postId);
+            if (post != null) {
+                return ResponseEntity.ok(BaseResponse.success(SuccessCode.LOGICAL_DELETE_SUCCESS, post));
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(BaseResponse.error(ErrorCode.FORBIDDEN, "채용공고를 삭제할 권한이 없습니다."));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "채용공고 삭제에 실패했습니다."));
+        }
+    }
 }
