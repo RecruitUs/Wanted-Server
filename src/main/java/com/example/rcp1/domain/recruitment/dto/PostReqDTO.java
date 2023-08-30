@@ -1,17 +1,15 @@
 package com.example.rcp1.domain.recruitment.dto;
 
-import com.example.rcp1.domain.recruitment.domain.Field;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-public class PostDTO {
+public class PostReqDTO {
 
     @NotBlank
     private String title;
