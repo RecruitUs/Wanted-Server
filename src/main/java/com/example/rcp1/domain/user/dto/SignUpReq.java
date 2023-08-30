@@ -16,6 +16,8 @@ public class SignUpReq {
     @NotBlank
     private String password;
 
+    private String userType;
+
     private String name;
 
     private String phoneNumber;

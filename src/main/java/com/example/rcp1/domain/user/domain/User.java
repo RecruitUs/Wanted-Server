@@ -30,6 +30,9 @@ public class User extends BaseEntity {
     private String password;
 
     @Column
+    private String userType;
+
+    @Column
     private String name;
 
     @Column
@@ -61,10 +64,11 @@ public class User extends BaseEntity {
 
 
     @Builder
-    public User(Long id, String email, String password, String name, String phoneNumber, String specializedField, Long career, String position, String school, String job, LocalDateTime created, LocalDateTime updated, String status) {
+    public User(Long id, String email, String password, String userType, String name, String phoneNumber, String specializedField, Long career, String position, String school, String job, LocalDateTime created, LocalDateTime updated, String status) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.userType = userType;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.specializedField = specializedField;
@@ -76,6 +80,7 @@ public class User extends BaseEntity {
         this.updated = updated;
         this.status = status;
     }
+
 
 
     // 논리 삭제 상태 수정
