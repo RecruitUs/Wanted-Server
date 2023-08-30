@@ -2,6 +2,8 @@ package com.example.rcp1.domain.heart.application;
 
 import com.example.rcp1.domain.heart.domain.Heart;
 import com.example.rcp1.domain.heart.domain.repository.HeartRepository;
+import com.example.rcp1.domain.recruitment.domain.Post;
+import com.example.rcp1.domain.recruitment.domain.repository.PostRepository;
 import com.example.rcp1.domain.user.domain.User;
 import com.example.rcp1.domain.user.domain.repository.UserRepository;
 import com.example.rcp1.domain.user.presentation.UserController;
@@ -24,7 +26,7 @@ public class HeartService {
 
     private final HeartRepository heartRepository;
     private final UserRepository userRepository;
-//    private final CompanyRepository companyRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public String insert(String access_token, Long postId) {
@@ -33,14 +35,18 @@ public class HeartService {
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        User user = optionalUser.get();
+        Optional<Post> optionalPost = postRepository.findById(postId);
 
-        if (heartRepository.findByUser(user).isPresent()) {
+        User user = optionalUser.get();
+        Post post = optionalPost.get();
+
+        if (heartRepository.findByUserAndPost(user, post).isPresent()) {
             return null;
         }
 
         Heart heart = Heart.builder()
                 .user(user)
+                .post(post)
                 .build();
 
         heartRepository.save(heart);
@@ -56,9 +62,9 @@ public class HeartService {
 
         User user = userRepository.findByEmail(email).get();
 
-        // Company company = companyRepository.findById(postId);
+        Post post = postRepository.findById(postId).get();
 
-        Heart heart = heartRepository.findByUser(user).get(); // company 코드 구현되면 findByUserAndCompany로 수정해야함
+        Heart heart = heartRepository.findByUserAndPost(user, post).get(); // company 코드 구현되면 findByUserAndCompany로 수정해야함
 
         heartRepository.delete(heart);
     }

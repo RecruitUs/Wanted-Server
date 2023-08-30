@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class JwtUtil {
 
+
     public static String getUserEmail(String token, String secretkey) {
         return Jwts.parser().setSigningKey(secretkey).parseClaimsJws(token)
                 .getBody().get("email", String.class);
@@ -19,8 +20,10 @@ public class JwtUtil {
     }
 
     public static String createJwt(String email, String secretKey, Long expiredMs) {
+
         Claims claims = Jwts.claims();
         claims.put("email", email);
+
 
         return Jwts.builder()
                 .setClaims(claims)

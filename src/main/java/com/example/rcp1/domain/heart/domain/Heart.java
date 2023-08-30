@@ -1,5 +1,6 @@
 package com.example.rcp1.domain.heart.domain;
 
+import com.example.rcp1.domain.recruitment.domain.Post;
 import com.example.rcp1.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -20,12 +21,14 @@ public class Heart {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Company company;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
 
 
     @Builder
-    public Heart(Long id, User user) {
+    public Heart(Long id, User user, Post post) {
+        this.id = id;
         this.user = user;
+        this.post = post;
     }
 }
