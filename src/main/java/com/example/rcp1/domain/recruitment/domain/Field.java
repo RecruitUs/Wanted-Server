@@ -21,7 +21,7 @@ public class Field {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name="post_id")
     @JsonIgnore //양방향 관계 무한순환참조 방지
     private Post post;

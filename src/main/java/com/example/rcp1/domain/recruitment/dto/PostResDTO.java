@@ -17,6 +17,9 @@ public class PostResDTO { //반환용 DTO
     private Long userId;
 
     @NotBlank
+    private String userEmail;
+
+    @NotBlank
     private String title;
 
     @NotBlank

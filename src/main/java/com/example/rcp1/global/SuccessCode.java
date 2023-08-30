@@ -19,6 +19,7 @@ public enum SuccessCode {
     LOGICAL_DELETE_SUCCESS(OK, "논리적으로 삭제 되었습니다."),
     POST_CREATED_SUCCESS(CREATED, "채용공고 생성에 성공했습니다."),
     POST_RETRIEVAL_SUCCESS(OK,"채용공고 조회에 성공했습니다."),
+    POST_UPDATED_SUCCESS(OK, "채용공고 수정에 성공했습니다."),
     CREATE_APPLY_SUCCESS(OK, "채용 공고에 지원서를 제출했습니다.");
 
     private final HttpStatus httpStatus;
