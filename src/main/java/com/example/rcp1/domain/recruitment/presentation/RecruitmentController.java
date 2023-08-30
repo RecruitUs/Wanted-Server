@@ -5,6 +5,7 @@ import com.example.rcp1.domain.recruitment.application.RecruitmentService;
 import com.example.rcp1.domain.recruitment.domain.Post;
 import com.example.rcp1.domain.recruitment.dto.PostReqDTO;
 import com.example.rcp1.domain.recruitment.dto.PostResDTO;
+import com.example.rcp1.domain.user.dto.UpdateProfileReq;
 import com.example.rcp1.global.BaseResponse;
 import com.example.rcp1.global.ErrorCode;
 import com.example.rcp1.global.SuccessCode;
@@ -28,7 +29,12 @@ public class RecruitmentController {
         try {
             String token = Authorization.substring(7);
             Post post = recruitmentService.createRecruitmentPost(token, postDTO);
-            return ResponseEntity.ok(BaseResponse.success(SuccessCode.POST_CREATED_SUCCESS, post));
+            if (post != null) {
+                return ResponseEntity.ok(BaseResponse.success(SuccessCode.POST_CREATED_SUCCESS, post));
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(BaseResponse.error(ErrorCode.FORBIDDEN, "채용공고를 작성할 권한이 없습니다."));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "채용공고 게시에 실패했습니다."));
@@ -74,6 +80,25 @@ public class RecruitmentController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "채용공고 조회에 실패했습니다."));
+        }
+    }
+
+    //특정 채용공고 수정
+    @PatchMapping("/posts/{postId}")
+    public ResponseEntity<BaseResponse<PostResDTO>> updateRecruitmentPostById(@RequestHeader("Authorization") String Authorization,
+                                                                              @Valid @RequestBody PostReqDTO postReqDTO,@PathVariable Long postId){
+        try {
+            String token = Authorization.substring(7);
+            PostResDTO post = recruitmentService.updateRecruitmentPostById(token,postReqDTO,postId);
+            if (post != null) {
+                return ResponseEntity.ok(BaseResponse.success(SuccessCode.POST_UPDATED_SUCCESS, post));
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(BaseResponse.error(ErrorCode.FORBIDDEN, "채용공고를 수정할 권한이 없습니다."));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "채용공고 수정에 실패했습니다."));
         }
     }
 

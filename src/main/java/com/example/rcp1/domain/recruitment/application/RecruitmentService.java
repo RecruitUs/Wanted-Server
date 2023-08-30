@@ -104,4 +104,70 @@ public class RecruitmentService {
     }
 
 
+    @Transactional
+    public PostResDTO updateRecruitmentPostById(String token, PostReqDTO postReqDTO, Long postId) {
+        String email = JwtUtil.getUserEmail(token, secretKey);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (!optionalUser.isPresent()) {
+            //사용자를 찾을 수 없음
+            return null;//null->Exception 변경 예정
+        }
+
+        User user = optionalUser.get();
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (!optionalPost.isPresent()) {
+            //게시물을 찾을 수 없음
+            return null;
+        }
+
+        Post post = optionalPost.get();
+        if (!user.getId().equals(post.getUser().getId())) {
+            //올바르지 않은 사용자
+            return null;
+        }
+        //Update
+        if (postReqDTO.getTitle() != null) {
+            post.setTitle(postReqDTO.getTitle());
+        }
+
+        if (postReqDTO.getCompany_photo_url() != null) {
+            post.setCompany_photo_url(postReqDTO.getCompany_photo_url());
+        }
+
+        if (postReqDTO.getCompensation_recommender() > 0) {
+            post.setCompensation_recommender(postReqDTO.getCompensation_recommender());
+        }
+
+        if (postReqDTO.getCompensation_applicant() > 0) {
+            post.setCompensation_applicant(postReqDTO.getCompensation_applicant());
+        }
+
+        if (postReqDTO.getDueDate() != null) {
+            post.setDueDate(postReqDTO.getDueDate());
+        }
+
+        if (postReqDTO.getContent() != null) {
+            post.setContent(postReqDTO.getContent());
+        }
+
+        if (postReqDTO.getWorking_address() != null) {
+            post.setWorking_address(postReqDTO.getWorking_address());
+        }
+
+        if (postReqDTO.getFields() != null && !postReqDTO.getFields().isEmpty()) {
+            //기존 field 삭제
+            for (Field field : post.getFields()) {
+                fieldRepository.delete(field);
+            }
+            post.getFields().clear();
+            //새로운 field 설정
+            for(FieldDTO fieldDTO : postReqDTO.getFields()){
+                Field field = new Field();
+                field.setName(fieldDTO.getName());
+                post.addField(field);
+            }
+        }
+       Post updatedPost = postRepository.save(post);
+       return modelMapper.map(updatedPost,PostResDTO.class);
+    }
 }
