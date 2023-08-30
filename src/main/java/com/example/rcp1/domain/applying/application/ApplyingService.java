@@ -3,6 +3,8 @@ package com.example.rcp1.domain.applying.application;
 import com.example.rcp1.domain.applying.domain.Applying;
 import com.example.rcp1.domain.applying.domain.repository.ApplyingRepository;
 import com.example.rcp1.domain.applying.dto.ApplyReq;
+import com.example.rcp1.domain.applying.dto.GetStatusRes;
+import com.example.rcp1.domain.applying.dto.SetResultReq;
 import com.example.rcp1.domain.recruitment.domain.Post;
 import com.example.rcp1.domain.recruitment.domain.repository.PostRepository;
 import com.example.rcp1.domain.user.domain.User;
@@ -13,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -56,5 +58,67 @@ public class ApplyingService {
 
 
         return applying;
+    }
+
+    // 채용 지원 취소
+    @Transactional
+    public void applyCancel(String token, Long applyingId) {
+
+        String email = JwtUtil.getUserEmail(token, secret_key);
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = optionalUser.get();
+
+        Optional<Applying> optionalApplying = applyingRepository.findById(applyingId);
+        Applying applying = optionalApplying.get();
+
+        if (user == applying.getUser()) {
+            applyingRepository.deleteById(applying.getId());
+        } else {
+            return;
+        }
+
+
+
+    }
+
+    @Transactional
+    public ArrayList<GetStatusRes> getStatus(String token) {
+
+
+        String email = JwtUtil.getUserEmail(token, secret_key);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = optionalUser.get();
+
+        ArrayList<GetStatusRes> getStatusResList = new ArrayList<>();
+
+        ArrayList<Applying> applyings = applyingRepository.findAllByUser(user);
+
+        for (Applying applyEntity : applyings) {
+
+            getStatusResList.add(GetStatusRes.toGetStatusRes(applyEntity));
+        }
+
+        return getStatusResList;
+
+
+    }
+
+
+    @Transactional
+    public void setStatus(String token, Long applyingId, SetResultReq setResultReq) {
+
+        String email = JwtUtil.getUserEmail(token, secret_key);
+
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = optionalUser.get();
+
+        Optional<Applying> optionalApplying = applyingRepository.findOneByIdAndUser(applyingId, user);
+        Applying applying = optionalApplying.get();
+        applying.setStatus(setResultReq.getStatus());
+
+        applyingRepository.save(applying);
+
     }
 }
