@@ -95,6 +95,6 @@ public class Post extends BaseEntity {
 
     public void addField(Field field) {
         fields.add(field);
-        field.setPost(this);
+        field.setPost(this);//연관관계의 주인으로부터의 양방향 맵핑 설정
     }
 }
