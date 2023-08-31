@@ -61,19 +61,6 @@ public class UserController {
 
 
 
-
-    // 테스트용 인가 글쓰기 (삭제 예정)
-    @PostMapping("/write")
-    public ResponseEntity<String> writeReview(Authentication authentication) {
-        return ResponseEntity.ok().body(authentication.getName() + "님의 글작성이 완료되었습니다.");
-    }
-
-    @PostMapping("/write2")
-    public ResponseEntity<String> writeReview2(@RequestHeader("Authorization") String Authorization) {
-        return ResponseEntity.ok().body(Authorization + "님의 글작성이 완료되었습니다.");
-    }
-
-
     // 유저 정보 수정
     @PatchMapping("/profile")
     public ResponseEntity<BaseResponse<?>> updateProfile(
