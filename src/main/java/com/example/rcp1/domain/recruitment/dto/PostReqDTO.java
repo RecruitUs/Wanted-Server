@@ -26,7 +26,7 @@ public class PostReqDTO {
     private LocalDate dueDate;
 
     @Min(0)
-    private int heart = 0;
+    private int numOfHearts = 0;
 
     @NotBlank
     private String content;

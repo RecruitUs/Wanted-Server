@@ -21,7 +21,8 @@ public class Field {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
+    //연관관계의 주인 (Many Side, has FK)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="post_id")
     @JsonIgnore //양방향 관계 무한순환참조 방지
     private Post post;

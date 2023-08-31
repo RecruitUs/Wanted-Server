@@ -2,6 +2,7 @@ package com.example.rcp1.domain.heart.domain;
 
 import com.example.rcp1.domain.recruitment.domain.Post;
 import com.example.rcp1.domain.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -19,9 +20,12 @@ public class Heart {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    @JsonIgnore
     private Post post;
 
 

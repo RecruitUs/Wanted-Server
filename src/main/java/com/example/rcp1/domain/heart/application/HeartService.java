@@ -49,6 +49,7 @@ public class HeartService {
                 .post(post)
                 .build();
 
+        post.addHeart(heart);//양방향
         heartRepository.save(heart);
 
         return "success";
@@ -66,6 +67,7 @@ public class HeartService {
 
         Heart heart = heartRepository.findByUserAndPost(user, post).get(); // company 코드 구현되면 findByUserAndCompany로 수정해야함
 
+        post.removeHeart(heart);//양방향
         heartRepository.delete(heart);
     }
 }

@@ -2,6 +2,7 @@ package com.example.rcp1.domain.recruitment.domain;
 
 
 import com.example.rcp1.domain.common.BaseEntity;
+import com.example.rcp1.domain.heart.domain.Heart;
 import com.example.rcp1.domain.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,10 +42,6 @@ public class Post extends BaseEntity {
 
     @Column
     private LocalDate dueDate;
-
-    @Column
-    private int heart;
-
     @Column
     private String content;
 
@@ -60,12 +57,18 @@ public class Post extends BaseEntity {
     @Column
     private String status;
 
-    //양방향 관계 설정 - 연관관계의 주인
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    //<Attributes at Persistence Context, not DB>
+    //양방향 관계 설정 - 연관관계의 주인 아님(Side One)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Field> fields;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Heart> hearts;
+
+    private int numOfHearts;
+
     @Builder
-    public Post(Long id, User user, String title, String company_photo_url, int compensation_recommender, int compensation_applicant, LocalDate dueDate, int heart, String content, String working_address, LocalDateTime created, LocalDateTime updated, String status) {
+    public Post(Long id, User user, String title, String company_photo_url, int compensation_recommender, int compensation_applicant, LocalDate dueDate, String content, String working_address, LocalDateTime created, LocalDateTime updated, String status) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -73,13 +76,14 @@ public class Post extends BaseEntity {
         this.compensation_recommender = compensation_recommender;
         this.compensation_applicant = compensation_applicant;
         this.dueDate = dueDate;
-        this.heart = heart;
         this.content = content;
         this.working_address = working_address;
         this.created = created;
         this.updated = updated;
         this.status = status;
         this.fields = new HashSet<Field>();
+        this.hearts = new HashSet<Heart>();
+        this.numOfHearts = 0;
     }
 
     /**
@@ -96,6 +100,20 @@ public class Post extends BaseEntity {
 
     public void addField(Field field) {
         fields.add(field);
-        field.setPost(this);//연관관계의 주인으로부터의 양방향 맵핑 설정
+        field.setPost(this);//양방향 맵핑 설정
+    }
+
+    public void addHeart(Heart heart) {
+        hearts.add(heart);
+        updateNumOfHearts();
+    }
+
+    public void removeHeart(Heart heart) {
+        hearts.remove(heart);
+        updateNumOfHearts();
+    }
+
+    private void updateNumOfHearts() {
+        numOfHearts = hearts.size();
     }
 }
