@@ -1,5 +1,6 @@
 package com.example.rcp1.domain.recruitment.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -14,10 +15,16 @@ public class PostResDTO { //반환용 DTO
     private Long id;
 
     @NotBlank
+    @JsonProperty("company_id")
     private Long userId;
 
     @NotBlank
+    @JsonProperty("company_email")
     private String userEmail;
+
+    @NotBlank
+    @JsonProperty("company_name")
+    private String userName;
 
     @NotBlank
     private String title;
