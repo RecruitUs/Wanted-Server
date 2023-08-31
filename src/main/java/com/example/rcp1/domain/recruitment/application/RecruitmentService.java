@@ -1,6 +1,7 @@
 package com.example.rcp1.domain.recruitment.application;
 
 
+import com.example.rcp1.domain.heart.domain.repository.HeartRepository;
 import com.example.rcp1.domain.recruitment.domain.Field;
 import com.example.rcp1.domain.recruitment.domain.Post;
 import com.example.rcp1.domain.recruitment.domain.repository.FieldRepository;
@@ -30,6 +31,7 @@ public class RecruitmentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final FieldRepository fieldRepository;
+    private final HeartRepository heartRepository;
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Transactional
@@ -47,7 +49,6 @@ public class RecruitmentService {
                     .compensation_recommender(postDTO.getCompensation_recommender())
                     .compensation_applicant(postDTO.getCompensation_applicant())
                     .dueDate(postDTO.getDueDate())
-                    .heart(postDTO.getHeart())
                     .content(postDTO.getContent())
                     .working_address(postDTO.getWorking_address())
                     .status("A")
@@ -194,6 +195,7 @@ public class RecruitmentService {
         }
         //Delete
         post.setStatusD();
+        heartRepository.deleteByPost(post);//좋아요 테이블에서 삭제
         return postRepository.save(post);
     }
 }

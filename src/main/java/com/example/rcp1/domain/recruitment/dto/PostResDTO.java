@@ -40,9 +40,6 @@ public class PostResDTO { //반환용 DTO
 
     private LocalDate dueDate;
 
-    @Min(0)
-    private int heart = 0;
-
     @NotBlank
     private String content;
 
@@ -50,4 +47,9 @@ public class PostResDTO { //반환용 DTO
     private String working_address;
 
     Set<FieldDTO> fields = new HashSet<>();
+
+    @Min(0)
+    private int numOfHearts;
+
+
 }
