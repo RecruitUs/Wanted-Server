@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RequestMapping("/recruiting")
 @RestController
@@ -83,6 +84,24 @@ public class RecruitmentController {
         }
     }
 
+    //선택된 필터들에 해당하는 채용공고 리스트 조회
+    @GetMapping("/posts/search/filters")
+    public ResponseEntity<BaseResponse<List<PostResDTO>>> retrieveRecruitmentPostsByFilters(@RequestParam(value = "field", required = false) Set<String> fields,
+                                                                                            @RequestParam(value = "career", required = false) Integer career){
+        try {
+            List<PostResDTO> posts = recruitmentService.retrieveRecruitmentPostsByFilters(fields,career);
+            if (!posts.isEmpty()) {
+                return ResponseEntity.ok(BaseResponse.success(SuccessCode.POST_RETRIEVAL_SUCCESS, posts));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(BaseResponse.error(ErrorCode.NOT_FOUND, "해당 조건에 맞는 채용공고를 찾을 수 없습니다."));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "채용공고 조회에 실패했습니다."));
+        }
+    }
+
     //특정 채용공고 수정
     @PatchMapping("/posts/{postId}")
     public ResponseEntity<BaseResponse<PostResDTO>> updateRecruitmentPostById(@RequestHeader("Authorization") String Authorization,
@@ -120,4 +139,5 @@ public class RecruitmentController {
                     .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "채용공고 삭제에 실패했습니다."));
         }
     }
+
 }

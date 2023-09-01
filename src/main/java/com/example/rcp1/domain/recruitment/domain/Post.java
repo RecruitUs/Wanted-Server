@@ -42,8 +42,12 @@ public class Post extends BaseEntity {
 
     @Column
     private LocalDate dueDate;
+
     @Column
     private String content;
+
+    @Column
+    private int required_career;
 
     @Column
     private String working_address;
@@ -68,7 +72,7 @@ public class Post extends BaseEntity {
     private int numOfHearts;
 
     @Builder
-    public Post(Long id, User user, String title, String company_photo_url, int compensation_recommender, int compensation_applicant, LocalDate dueDate, String content, String working_address, LocalDateTime created, LocalDateTime updated, String status) {
+    public Post(Long id, User user, String title, String company_photo_url, int compensation_recommender, int compensation_applicant, LocalDate dueDate, String content, int required_career, String working_address, LocalDateTime created, LocalDateTime updated, String status) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -77,6 +81,7 @@ public class Post extends BaseEntity {
         this.compensation_applicant = compensation_applicant;
         this.dueDate = dueDate;
         this.content = content;
+        this.required_career = required_career;
         this.working_address = working_address;
         this.created = created;
         this.updated = updated;

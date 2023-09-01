@@ -12,15 +12,17 @@ import com.example.rcp1.domain.recruitment.dto.PostResDTO;
 import com.example.rcp1.domain.user.domain.User;
 import com.example.rcp1.domain.user.domain.repository.UserRepository;
 import com.example.rcp1.global.config.security.util.JwtUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ public class RecruitmentService {
     private final FieldRepository fieldRepository;
     private final HeartRepository heartRepository;
     private final ModelMapper modelMapper = new ModelMapper();
+    private final EntityManager entityManager;
 
     @Transactional
     public Post createRecruitmentPost(String token, PostReqDTO postDTO) {
@@ -50,6 +53,7 @@ public class RecruitmentService {
                     .compensation_applicant(postDTO.getCompensation_applicant())
                     .dueDate(postDTO.getDueDate())
                     .content(postDTO.getContent())
+                    .required_career(postDTO.getRequired_career())
                     .working_address(postDTO.getWorking_address())
                     .status("A")
                     .build();
@@ -59,24 +63,22 @@ public class RecruitmentService {
                 field.setName(fieldDTO.getName());
                 post.addField(field);
             }
-            // Post 엔티티 저장
-            postRepository.save(post);
-            return post; // Post 엔티티 반환
+            // Post 엔티티 저장 & 반환
+            return postRepository.save(post);
         }
         return null;
     }
 
     public List<PostResDTO> retrieveAllRecruitmentPosts(){
         List<Post> posts = postRepository.findByStatusNot("D");
-        if(posts!=null){
-            List<PostResDTO> postDTOs = new ArrayList<PostResDTO>();
-            for(Post post : posts){
+        List<PostResDTO> postDTOs = new ArrayList<PostResDTO>();
+        if(!posts.isEmpty()) {
+            for (Post post : posts) {
                 //ModelMapper.map : ENTITY -> DTO
                 postDTOs.add(modelMapper.map(post, PostResDTO.class));
             }
-            return postDTOs;
         }
-        return null;
+        return postDTOs;
     }
 
     public PostResDTO retrieveRecruitmentPostById(Long postId) {
@@ -90,20 +92,61 @@ public class RecruitmentService {
     }
 
     public List<PostResDTO> retrieveRecruitmentPostsOfCurrentCompany(String token) {
+        //get email by user token
         String email = JwtUtil.getUserEmail(token, secretKey);
+        //get user by user email
         Optional<User> user = userRepository.findByEmail(email);
+        List<PostResDTO> postDTOs = new ArrayList<PostResDTO>();
         if (user.isPresent()) {
-            List<Post> posts = postRepository.findByUser_IdAndStatusNot(user.get().getId(),"D");
-            List<PostResDTO> postDTOs = new ArrayList<PostResDTO>();
-            for(Post post : posts){
+            List<Post> posts = postRepository.findByUser_IdAndStatusNot(user.get().getId(), "D");
+
+            for (Post post : posts) {
                 //ModelMapper.map : ENTITY -> DTO
                 postDTOs.add(modelMapper.map(post, PostResDTO.class));
             }
-            return postDTOs;
         }
-        return null;
+        return postDTOs;
     }
 
+    public List<PostResDTO> retrieveRecruitmentPostsByFilters(Set<String> fieldNames, Integer career) {
+        /**정적 필터링 로직**/
+        /**모든 필터 적용 경우의 수에 따른 조건과 repository 메소드 구현해야함**/
+//        List<Post> posts = new ArrayList<>();
+//        if(fieldNames!=null&&career!=null) posts = postRepository.findByFilters(fieldNames,career);
+//        else if(fieldNames!=null&&career==null) posts = postRepository.findByFilters(career);
+//        else if(fieldNames==null&&career!=null) posts = postRepository.findByFilters(career);
+//        //선택한 필터가 없을경우
+//        else if(fieldNames==null&&career==null) posts = postRepository.findAll();
+
+        /**동적 필터링 로직 - Criteria API를 사용하여 동적 쿼리 활용**/
+        /**이 방식을 이용하면 JPA Repository 사용할 필요 없음**/
+        /**하지만 여전히 복잡한 코드 -> 향후 queryDSL로 교체**/
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Post> query = criteriaBuilder.createQuery(Post.class);
+        Root<Post> root = query.from(Post.class);
+        List<Predicate> predicates = new ArrayList<>();
+        if (fieldNames != null && !fieldNames.isEmpty()) {
+            SetJoin<Post, Field> fields = root.joinSet("fields", JoinType.INNER);
+            predicates.add(fields.get("name").in(fieldNames));
+        }
+        if (career != null) {
+            predicates.add(criteriaBuilder.equal(root.get("required_career"), career));
+        }
+        if (!predicates.isEmpty()) {
+            query.where(predicates.toArray(new Predicate[0]));
+        }
+        TypedQuery<Post> typedQuery = entityManager.createQuery(query);
+        List<Post> posts = typedQuery.getResultList();
+
+        //Entity -> DTO
+        List<PostResDTO> postDTOs = new ArrayList<PostResDTO>();
+        if(!posts.isEmpty()){
+            for(Post post : posts){
+                postDTOs.add(modelMapper.map(post, PostResDTO.class));
+            }
+        }
+        return postDTOs;
+    }
 
     @Transactional
     public PostResDTO updateRecruitmentPostById(String token, PostReqDTO postReqDTO, Long postId) {
@@ -198,4 +241,6 @@ public class RecruitmentService {
         heartRepository.deleteByPost(post);//좋아요 테이블에서 삭제
         return postRepository.save(post);
     }
+
+
 }
