@@ -102,6 +102,23 @@ public class RecruitmentController {
         }
     }
 
+    //특정 검색어(키워드) 포함하는 채용공고 리스트 조회
+    @GetMapping("/posts/search")
+    public ResponseEntity<BaseResponse<List<PostResDTO>>> retrieveRecruitmentPostsByKeyword(@RequestParam(value = "keyword", required = true) String keyword) {
+        try {
+            List<PostResDTO> posts = recruitmentService.retrieveRecruitmentPostsByKeyword(keyword);
+            if (!posts.isEmpty()) {
+                return ResponseEntity.ok(BaseResponse.success(SuccessCode.POST_RETRIEVAL_SUCCESS, posts));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(BaseResponse.error(ErrorCode.NOT_FOUND, "해당 검색어에 맞는 채용공고를 찾을 수 없습니다."));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(BaseResponse.error(ErrorCode.REQUEST_VALIDATION_EXCEPTION, "채용공고 조회에 실패했습니다."));
+        }
+    }
+
     //특정 채용공고 수정
     @PatchMapping("/posts/{postId}")
     public ResponseEntity<BaseResponse<PostResDTO>> updateRecruitmentPostById(@RequestHeader("Authorization") String Authorization,

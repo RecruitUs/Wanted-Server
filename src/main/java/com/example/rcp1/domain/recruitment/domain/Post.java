@@ -4,9 +4,6 @@ package com.example.rcp1.domain.recruitment.domain;
 import com.example.rcp1.domain.common.BaseEntity;
 import com.example.rcp1.domain.heart.domain.Heart;
 import com.example.rcp1.domain.user.domain.User;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 

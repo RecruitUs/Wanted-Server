@@ -148,6 +148,17 @@ public class RecruitmentService {
         return postDTOs;
     }
 
+    public List<PostResDTO> retrieveRecruitmentPostsByKeyword(String keyword) {
+        List<Post> posts = postRepository.findByKeyword(keyword);
+        List<PostResDTO> postDTOs = new ArrayList<PostResDTO>();
+        if(!posts.isEmpty()) {
+            for (Post post : posts) {
+                postDTOs.add(modelMapper.map(post, PostResDTO.class));
+            }
+        }
+        return postDTOs;
+    }
+
     @Transactional
     public PostResDTO updateRecruitmentPostById(String token, PostReqDTO postReqDTO, Long postId) {
         String email = JwtUtil.getUserEmail(token, secretKey);
@@ -241,6 +252,5 @@ public class RecruitmentService {
         heartRepository.deleteByPost(post);//좋아요 테이블에서 삭제
         return postRepository.save(post);
     }
-
 
 }
