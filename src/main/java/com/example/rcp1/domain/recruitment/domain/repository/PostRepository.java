@@ -23,6 +23,14 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     List<Post> findByUser_Id(Long userId);
 
+    @Query("SELECT p FROM Post p JOIN p.user u JOIN p.fields f " +
+            "WHERE (u.name LIKE %:keyword% " +
+            "OR p.content LIKE %:keyword%" +
+            "OR p.title LIKE %:keyword% " +
+            "OR f.name LIKE %:keyword%)" +
+            "AND p.status <> 'D'")
+    List<Post> findByKeyword(@Param("keyword") String keyword);
+    //검색어가 회사의 이름 OR 공고 제목 OR 공고 본문 OR 직무분야 명에 포함되는 Post 반환
 
 
     /**정적 필터링 로직 사용시**/
@@ -35,6 +43,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     @Query("SELECT p FROM Post p JOIN p.fields f WHERE p.required_career = :career AND p.status <> 'D'")
     List<Post> findByFilters(@Param("career") Integer career);
+
 
 
 }
