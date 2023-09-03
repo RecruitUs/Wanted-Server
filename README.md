@@ -4,6 +4,8 @@
 ### ERD
 ![Wanted_ERD](https://github.com/RecruitUs/Wanted-Server/assets/96376539/88124126-d994-496e-90f4-f07c4465e5d6)
 
+### API Documents
+https://www.notion.so/WANTED-API-69799bb7dbcc493cbda0bb503c14082f
 
 Commit Convention
 
