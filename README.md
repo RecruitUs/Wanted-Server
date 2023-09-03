@@ -1,6 +1,9 @@
 ## Wanted-Server
 ![FINALWANTED](https://github.com/RecruitUs/Wanted-Server/assets/67510260/3f99e77f-cda1-4666-9c40-00d092e1224c)
 
+### ERD
+![Wanted_ERD](https://github.com/RecruitUs/Wanted-Server/assets/96376539/88124126-d994-496e-90f4-f07c4465e5d6)
+
 
 Commit Convention
 
